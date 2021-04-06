@@ -15,6 +15,7 @@ public class Move : MonoBehaviour
     public Color Nobonus;
     public float minrot;
     public float maxrot;
+    public BlackMoku B;
 
     void FixedUpdate()
     {
@@ -43,34 +44,86 @@ public class Move : MonoBehaviour
         }
     }
     public bool canshoot = true;
+    public bool ItemUsed = false;
+    public float Targettime;
+    public Transform[] Sups;
+    float count = 0;
+    public bool ItemMegaShoot = false;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canshoot)
+        if (!ItemUsed)
         {
-            if (A.BulletNum > 0)
+            if (Input.GetKeyDown(KeyCode.Space) && canshoot)
             {
-                A.bulletbonus = 1.0f;
-                A.BulletNum--;
-                Instantiate(Bullet, Centerplayer.transform.position, this.transform.rotation);
-                canshoot = false;
-                if (A.BulletNum == 0)
+                if (A.BulletNum > 0)
                 {
-                    this.GetComponent<ReloadBullet>().ST();
-                    A.bulletbonus = 2.2f;
+                    A.bulletbonus = 1.0f;
+                    A.BulletNum--;
+                    if (!ItemMegaShoot)
+                    {
+                        Instantiate(Bullet, Centerplayer.transform.position, this.transform.rotation);
+                    }
+                    else
+                    {
+                        foreach (var i in Sups)
+                        {
+                            Instantiate(Bullet, i.position, i.rotation);
+                        }
+                    }
+                    canshoot = false;
+                    if (A.BulletNum == 0)
+                    {
+                        this.GetComponent<ReloadBullet>().ST();
+                        A.bulletbonus = 2.2f;
 
+                    }
+                    if (A.BulletNum == 1)
+                    {
+                        Blt.color = Bonus;
+                    }
                 }
-                if (A.BulletNum == 1)
+                Blt.text = A.BulletNum + "/" + A.MaxBullet;
+            }
+        }
+        else
+        {
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                count += Time.deltaTime;
+                if (count >= Targettime)
                 {
-                    Blt.color = Bonus;
+                    if (A.BulletNum > 0)
+                    {
+                        A.bulletbonus = 1.0f;
+                        A.BulletNum--;
+                        if (!ItemMegaShoot)
+                        {
+                            Instantiate(Bullet, Centerplayer.transform.position, this.transform.rotation);
+                        }
+                        else
+                        {
+                            foreach (var i in Sups)
+                            {
+                                Instantiate(Bullet, i.position, i.rotation);
+                            }
+                        }
+                        if (A.BulletNum == 0)
+                        {
+                            this.GetComponent<ReloadBullet>().ST();
+                            A.bulletbonus = 2.2f;
+
+                        }
+                        if (A.BulletNum == 1)
+                        {
+                            Blt.color = Bonus;
+                        }
+                    }
+                    Blt.text = A.BulletNum + "/" + A.MaxBullet;
+                    count = 0;
                 }
             }
-            Blt.text = A.BulletNum + "/" + A.MaxBullet;
-
-
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+
     }
 }

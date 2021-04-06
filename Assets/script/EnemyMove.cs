@@ -8,12 +8,15 @@ public class EnemyMove : MonoBehaviour
     int a = 1;
     public GameObject Bullet;
     GManager A;
+    public int ItemNum = 0;   // 0 baihgui, 1 tomruulah, 2 daraalj buudah, 3 tsatsah
     void Start()
     {
         if (transform.position.x > 0)
         {
-
-            GetComponent<SpriteRenderer>().flipX = true;
+            if (ItemNum == 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
             a = -1;
         }
         A = GetComponent<GetGameManager>().Get();
@@ -24,15 +27,6 @@ public class EnemyMove : MonoBehaviour
     public bool isbee;
     void FixedUpdate()
     {
-        /* if (!isbee)
-         {
-             count += Time.fixedDeltaTime;
-             if (count >= targettime)
-             {
-                 count = 0;
-                 Instantiate(Bullet, this.transform.position, this.transform.rotation);
-             }
-         }*/
         transform.Translate(Vector2.right * a * speed * Time.fixedDeltaTime * A.timebonus);
 
     }

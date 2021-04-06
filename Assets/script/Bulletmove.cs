@@ -10,6 +10,7 @@ public class Bulletmove : MonoBehaviour
     private void Start()
     {
         A = GetComponent<GetGameManager>().Get();
+        this.transform.localScale = A.Tomruulah;
     }
     void FixedUpdate()
     {
@@ -47,9 +48,17 @@ public class Bulletmove : MonoBehaviour
         {
             if (speed > 0)
             {
-                x++;
-                Destroy(other.gameObject);
-                A.Hit(other.gameObject.GetComponent<EnemyMove>().score, x);
+                if (other.gameObject.GetComponent<EnemyMove>().ItemNum == 0)
+                {
+                    x++;
+                    Destroy(other.gameObject);
+                    A.Hit(other.gameObject.GetComponent<EnemyMove>().score, x);
+                }
+                else
+                {
+                    A.GetItem(other.gameObject.GetComponent<EnemyMove>().ItemNum);
+                    Destroy(other.gameObject);
+                }
 
             }
         }
@@ -57,9 +66,10 @@ public class Bulletmove : MonoBehaviour
         {
             if (speed > 0)
             {
-                 A.Hit(other.gameObject.GetComponent<EnemyMove>().score, x);
+                A.Hit(other.gameObject.GetComponent<EnemyMove>().score, x);
                 Destroy(other.gameObject);
-                A.HpChange(-1);
+                //A.HpChange(-1);
+                A.gameTime += 10;
             }
         }
     }
